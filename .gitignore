@@ -1,0 +1,27 @@
+# Godot
+.godot/
+*.import
+*.translation
+export_presets.cfg
+godot/.godot/
+
+# Godot autoloads
+# (keep in repo if used)
+
+# Art source files (keep in repo)
+# *.ase
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.exe
+*.app/
+*.dmg
+
+# Python
+__pycache__/
+*.pyc
+.env
+venv/
