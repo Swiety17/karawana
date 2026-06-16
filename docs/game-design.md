@@ -1,342 +1,208 @@
-# Game Design Document — Karawana
+# Game Design Document — Karawana (SZKIELET)
 
-> **Wersja:** 0.1.0 (draft)  
+> **Wersja:** 0.1.1 (szkielet — decyzje do podjęcia)  
 > **Data:** 2026-06-16  
-> **Autor:** Przemek + Rychu (Alfred)  
-> **Repo:** https://github.com/Swiety17/karawana
+> **Jak czytać:** Każda sekcja zawiera pytania do decyzji, zamiast gotowych odpowiedzi.  
+> **Pełna lista decyzji:** `docs/decisions-checklist.md` (56 punktów)
 
 ---
 
 ## 1. Elevator Pitch
 
-**Karawana** to single-player RPG ekonomiczne w klimacie dark fantasy. Wcielasz się w woźnicę-handlarza przemierzającego mroczny, podzielony wojnami świat. Handlujesz artefaktami, surowcami i informacjami między frakcjami. Rozwijasz swój wóz, ulepszasz ekwipunek, bronisz taboru przed bandytami i potworami. Każda decyzja handlowa wpływa na geopolitykę — możesz nieświadomie dostarczyć broń stronie, która jutro podbije twoje rodzinne miasto.
+> 🟡 **DO UZGODNIENIA** — checklist §1
 
-**Gatunek:** Ekonomiczne RPG z elementami survivalu i taktycznej obrony taboru  
-**Perspektywa:** Top-down 2D (jak Stardew Valley)  
-**Styl graficzny:** Pixel art 32×32, mroczna paleta (dark fantasy)  
-**Platforma:** PC + Mac  
-**Gracze:** Single-player
+Jedno zdanie opisujące grę: `[KTO] robi [CO] w [ŚWIECIE], żeby [CEL].`
 
----
+Przykład (z briefu): *"Woźnica-handlarz przemierza dark fantasy świat, handlując artefaktami i zasobami między frakcjami, rozwijając swój tabor i broniąc go przed niebezpieczeństwami traktu."*
 
-## 2. Setting — Mroczny Świat Podzielony Wojną
-
-### 2.1. Świat w pigułce
-
-Świat nie ma jednej nazwy — różne kultury nazywają go inaczej. To kontynent rozbity na frakcje po upadku Starego Imperium. Od stu lat trwa era **Rozbicia** — pomniejsze królestwa, republiki kupieckie i teokracje walczą o wpływy. Nikt nie pamięta czasów jedności. Trakty handlowe, niegdyś bezpieczne, teraz są areną dla bandytów, dezerterów i plugawych kreatur, które wyczuły słabość cywilizacji.
-
-### 2.2. Rola woźnicy-handlarza
-
-W tym świecie karawaniarze to jedyna stała. Nie należą do żadnej frakcji — są solą ziemi, która trzyma resztki cywilizacji w kupie. Bez nich miasta głodują, armie rdzewieją bez stali, a wiedza ginie. Woźnica to zawód szanowany... i niebezpieczny. Każdy trakt może być tym ostatnim.
+- [ ] 1.1 — Nazwa gry
+- [ ] 1.2 — Dominanta rozgrywki (co jest najważniejsze?)
+- [ ] 1.6 — Grupa docelowa
 
 ---
 
-## 3. Core Loop — Pętla Rozgrywki
+## 2. Core Loop — Pętla Rozgrywki
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                                                         │
-│   KUPUJ                PODRÓŻUJ             SPRZEDAJ    │
-│   ┌─────┐            ┌─────────┐           ┌───────┐   │
-│   │Miasto│ ──trakt──→│  BIOM(Y) │──trakt──→│ Miasto│   │
-│   │  A   │           │ • spotkania        │   B   │   │
-│   │towary│           │ • obrona taboru    │ceny $$│   │
-│   └─────┘            │ • wydarzenia       └───────┘   │
-│       ↑              └─────────┘              │        │
-│       │                                       ↓        │
-│       │         ◄─── UPGRADUJ ────      ZARABIAJ      │
-│       │         (wóz, osiołek, bronie)                 │
-│       └───────────────────────────────────────────────│
-└─────────────────────────────────────────────────────────┘
+```text
+KUPUJ → PODRÓŻUJ → [WYDARZENIA NA TRAKCIE] → SPRZEDAJ → UPGRADUJ → KUPUJ...
 ```
 
-### 3.1. Fazy pętli
+> 🟡 **DO UZGODNIENIA** — checklist §5, §6
 
-1. **W mieście (Faza handlu)**
-   - Przeglądasz towary na rynku, sprawdzasz ceny
-   - Kupujesz tanio, analizujesz popyt w innych miastach
-   - Zbierasz plotki (informacje = przewaga handlowa)
-   - Naprawiasz wóz, ulepszasz ekwipunek
-   - Wybierasz cel podróży
-
-2. **Na trakcie (Faza podróży)**
-   - Wóz porusza się po mapie świata w czasie rzeczywistym (lub turowym?)
-   - Przemierzasz biomy — każdy ma własne zagrożenia i tempo podróży
-   - Losowe spotkania: bandyci, potwory, kupcy, uchodźcy, patrole
-   - Obrona taboru — prosta walka taktyczna
-   - Zarządzanie zasobami: żywność, pochodnie, części zamienne do wozu
-
-3. **W mieście docelowym (Faza sprzedaży)**
-   - Sprzedajesz towary — ceny zależne od lokalnego popytu/podaży i geopolityki
-   - Aktualizujesz wiedzę o świecie (co się zmieniło)
-   - Decydujesz: wracasz, jedziesz dalej, czy zostajesz na dłużej?
+- [ ] 5.1 — Jak działa czas podróży? (rzeczywisty, przyspieszony, turowy?)
+- [ ] 5.2 — Swobodny ruch po mapie czy tylko po traktach?
+- [ ] 5.4 — Czy gracz może biwakować? Co robi na postoju?
+- [ ] 6.1 — Jak często występują wydarzenia/walka na trakcie?
+- [ ] 6.2 — Jaki typ walki?
 
 ---
 
-## 4. Systemy Gry
+## 3. Setting — Świat
 
-### 4.1. System Handlu
+> 🟡 **DO UZGODNIENIA** — checklist §2
 
-**Towary** dzielą się na kategorie:
-
-| Kategoria | Przykłady | Cechy |
-|-----------|-----------|-------|
-| **Surowce** | Ruda żelaza, drewno, węgiel, zioła | Ciężkie, tanie, stabilne ceny |
-| **Artefakty** | Starożytne relikwie, magiczne komponenty, runy | Drogie, lekkie, zmienne ceny |
-| **Żywność** | Zboże, suszone mięso, wino, przyprawy | Psuje się z czasem, sezonowe |
-| **Towary wojenne** | Stal, broń, pancerze, proch | Ceny skaczą przy konfliktach |
-| **Informacje** | Mapy, listy żelazne, plotki frakcyjne | Ważą nic, wartość zmienna |
-| **Luksusy** | Jedwab, klejnoty, kadzidła | Ekstremalnie drogie, tylko bogate miasta |
-
-**Mechanika cen:**
-- Każde miasto ma **cenę bazową** dla każdego towaru
-- Cena = cena_bazowa × **mnożnik lokalny** × **mnożnik geopolityczny** × **mnożnik sezonowy**
-- Mnożnik lokalny: podaż (czy miasto produkuje towar) i popyt (czy potrzebuje)
-- Mnożnik geopolityczny: wojna = +200% cena stali, pokój = -30%
-- Mnożnik sezonowy: zima = +50% żywność, susza = +100% woda
-
-**Ładowność wozu:**
-- Bazowo: 100 jednostek
-- Upgrade'y: +50 / +100 / +200
-- Każdy towar ma wagę: surowce = 5, artefakty = 1, żywność = 3, broń = 4
-
-### 4.2. System Podróży
-
-**Mapa świata** — top-down 2D, tilemapa. Widoczne są:
-- Miasta (węzły handlowe)
-- Trakty (ścieżki między miastami)
-- Biomy (zmieniające się tereny)
-- Punkty orientacyjne (ruiny, źródła, warownie)
-
-**Ruch wozu:**
-- Kliknięcie na miasto → wóz jedzie traktem
-- Szybkość zależna od: biomu, stanu wozu, kondycji osiołka, pogody
-- Postoje: gracz może zatrzymać wóz w dowolnym momencie (biwak)
-
-**Biomy — wpływ na podróż:**
-
-| Biom | Szybkość | Zagrożenie | Efekt specjalny |
-|------|----------|------------|-----------------|
-| **Las Grozy** | 80% | Wysokie | Mgła — ograniczona widoczność |
-| **Martwe Bagna** | 40% | Bardzo wysokie | Trujące opary — obrażenia pasywne |
-| **Popioły (pustkowia)** | 100% | Niskie | Brak wody — zużycie zasobów ×2 |
-| **Przełęcz Cieni** | 60% | Wysokie | Lawiny — losowe uszkodzenia wozu |
-| **Równiny** | 120% | Niskie | Bezpieczna podróż |
-| **Ziemie Przeklęte** | 50% | Bardzo wysokie | Nekrotyczne — szansa na utratę towaru |
-
-### 4.3. System Walki / Obrony Taboru
-
-**Koncepcja:** Walka nie jest główną mechaniką — to taktyczna minigra obrony taboru.
-
-**Wyzwalanie:** Losowe spotkanie na trakcie. Przy złej pogodzie lub w niebezpiecznym biomie — wyższa szansa.
-
-**Przebieg walki (dwa warianty do wyboru):**
-
-*Wariant A — turowa, taktyczna:*
-- Plansza 5×7 pól (wóz pośrodku)
-- Gracz kontroluje woźnicę + ewentualnych najemników
-- Przeciwnicy podchodzą z krawędzi planszy
-- Cel: przetrwać X tur, chroniąc wóz i towar
-- Umiejętności: strzał z kuszy, pułapka, tarcza, leczenie
-
-*Wariant B — automatyczna z interwencją:*
-- Walka rozgrywa się automatycznie (animacja + rzuty kośćmi)
-- Gracz wybiera taktykę PRZED walką: agresywna / defensywna / ucieczka
-- Podczas walki może użyć jednorazowych przedmiotów (bomba dymna, święcona woda)
-- Wynik zależy od statystyk wozu, broni i wybranej taktyki
-
-**Rekomendacja:** Wariant B na start (MVP) → wariant A jako rozwinięcie.
-
-### 4.4. System Geopolityczny
-
-**Frakcje (3-4):**
-
-| Frakcja | Charakter | Specjalizacja |
-|---------|-----------|---------------|
-| **Żelazna Unia** | Militarystyczna republika kupiecka | Stal, broń, najemnicy |
-| **Zakon Płomienia** | Teokracja, fanatycy religijni | Artefakty, relikwie, informacje |
-| **Wolne Grody** | Luźna federacja miast | Żywność, rzemiosło, luksusy |
-| **Wyklęci** | Banici, heretycy, uchodźcy | Wszystko po okazyjnych cenach, wysokie ryzyko |
-
-**Relacje między frakcjami:**
-- Pokój → handel kwitnie, ceny stabilne
-- Napięcie → cła, kontrole na granicach
-- Wojna → blokady, ceny stali +200%, dostępność -50%
-
-**Wydarzenia geopolityczne (losowe, periodyczne):**
-- Wybuch wojny między frakcjami
-- Podpisanie rozejmu
-- Odkrycie złoża (ceny surowca spadają)
-- Zaraza (miasto zamknięte, handel wstrzymany)
-- Zamach na przywódcę (chaos, zmiana cen)
-
-**Wpływ gracza:** Handel z frakcją podczas wojny → poprawa relacji, lepsze ceny. Sprzedaż broni → eskalacja konfliktu.
-
-### 4.5. System Progresji
-
-**Wóz — upgrade'y:**
-
-| Poziom | Ładowność | Pancerz | Cecha specjalna |
-|--------|-----------|---------|-----------------|
-| Bieda-wóz | 100 | 0 | Brak |
-| Wzmocniony | 150 | 10 | Mniej uszkodzeń w walce |
-| Karawana | 200 | 25 | +1 najemnik |
-| Forteca na kołach | 300 | 50 | +2 najemnicy, pułapki |
-
-**Osiołek:**
-
-| Poziom | Szybkość | Wytrzymałość | Cecha |
-|--------|----------|-------------|-------|
-| Stary osioł | 100% | 100% | — |
-| Młody muł | 120% | 120% | Szybszy na równinach |
-| Koń bojowy | 140% | 150% | Nie płoszy się w walce |
-| Rumak cienia | 160% | 200% | Szybszy nocą, ignoruje strach |
-
-**Ekwipunek woźnicy:**
-
-- Broń: kusza (atak dystansowy), szabla (atak wręcz), bicz (odstraszanie)
-- Pancerz: skórzany, kolczuga, napierśnik
-- Narzędzia: zestaw naprawczy, pochodnie, lina, kompas
-- Przedmioty specjalne: kości wróżebne, mapa skarbów, glejt kupiecki
-
-**Reputacja:**
-- U każdej frakcji osobno (0-100)
-- Wysoka reputacja → lepsze ceny, dostęp do zakazanych towarów, eskorta
-- Niska → cła, odmowa handlu, ataki
+- [ ] 2.1 — Poziom fantasy (high / dark / low?)
+- [ ] 2.2 — Skala świata (mały region / średni kontynent / duży świat?)
+- [ ] 2.3 — Biomy — ile? jakie? klimat?
+- [ ] 2.4 — Frakcje — ile? charakter?
+- [ ] 2.5 — Magia — powszechna, rzadka, zakazana?
+- [ ] 2.7 — Rasy — tylko ludzie? inne?
+- [ ] 2.6 — Ile backstory/lore? (świat mówi przez otoczenie czy potrzebuje historii?)
 
 ---
 
-## 5. Postać Gracza
+## 4. Postać Gracza
 
-### 5.1. Kim jest woźnica?
+> 🟡 **DO UZGODNIENIA** — checklist §3
 
-Gracz zaczyna z niczym — starym wozem, kulawym osiołkiem i kilkoma monetami. Nie ma imienia, przeszłości ani domu. To **tabula rasa** — sami definiujemy, kim jesteśmy poprzez wybory.
-
-- **Płeć:** Do wyboru (mężczyzna / kobieta) — kosmetyczne
-- **Start:** Losowe miasto graniczne, podstawowy wóz, 50 złota
-- **Cel:** Nie ma jednego. To sandbox. Cele gracza: przetrwanie, bogactwo, reputacja, odkrycie tajemnic świata
-
-### 5.2. Statystyki
-
-| Statystyka | Opis |
-|------------|------|
-| **Targowanie** | Lepsze ceny kupna/sprzedaży |
-| **Percepcja** | Wykrywanie zagrożeń na trakcie, lepsze okazje handlowe |
-| **Walka** | Skuteczność w obronie taboru |
-| **Wiedza** | Znajomość artefaktów, języków frakcji, geopolityki |
-| **Charyzma** | Negocjacje, dostęp do informacji, rekrutacja najemników |
+- [ ] 3.1 — Kim jest gracz? Czy ma zdefiniowaną przeszłość?
+- [ ] 3.2 — Personalizacja (płeć, imię, portret — czy coś wybieramy?)
+- [ ] 3.3 — Statystyki postaci (są? ile?)
+- [ ] 3.4 — Rozwój (leveluje? perki? czy tylko ekwipunek?)
+- [ ] 3.5 — Reputacja u frakcji (jest? jak działa?)
 
 ---
 
-## 6. Interfejs — szkic
+## 5. System Handlu
 
-### 6.1. Widok mapy świata
+> 🟡 **DO UZGODNIENIA** — checklist §4
 
-```
-┌────────────────────────────────────────────────────┐
-│  ☀ Dzień 47   🪙 2345 zł   🛡️ Rep: Unia 45       │
-│                                                    │
-│              🌲 Las Grozy 🌲                       │
-│    [Miasto A]─────🚜──────[Ruiny]                  │
-│         │                              🏔️         │
-│         │                           Przełęcz      │
-│    [Miasto B]──────[Miasto C]                     │
-│              🌫️ Martwe Bagna 🌫️                   │
-│                                                    │
-│  🛞 Stan wozu: 85%  🐴 Kondycja: 90%              │
-│  📦 Ładunek: 67/100  🍞 Żywność: 12 dni           │
-└────────────────────────────────────────────────────┘
-```
-
-### 6.2. Widok handlu (w mieście)
-
-```
-┌────────────────────────────────────────────────────┐
-│  Rynek — Żelazna Unia (Twierdza Korin)             │
-│                                                    │
-│  Twoje złoto: 2345 🪙    Ładowność: 67/100        │
-│                                                    │
-│  ┌─────────────────────────────────────────────┐  │
-│  │ Towar          │ Kupno  │ Sprzedaż │ Waga   │  │
-│  │─────────────────────────────────────────────│  │
-│  │ Ruda żelaza    │  12 zł │   8 zł   │   5    │  │
-│  │ Stal 🚀        │  45 zł │  35 zł   │   4    │  │
-│  │ Artefakt ✨     │ 200 zł │ 150 zł   │   1    │  │
-│  │ Suchary        │   5 zł │   3 zł   │   3    │  │
-│  │ ...            │        │          │        │  │
-│  └─────────────────────────────────────────────┘  │
-│                                                    │
-│  [KUP] [SPRZEDAJ] [PLOTKI] [WYJEDŹ]              │
-└────────────────────────────────────────────────────┘
-```
-
-🚀 = cena wzrosła (wojna), ✨ = okazja, 📉 = cena spadła
-
-### 6.3. Widok obrony taboru (koncepcyjny)
-
-```
-┌────────────────────────────────────────────────────┐
-│  ⚔️ OBRONA TABORU — Bandyci atakują!              │
-│                                                    │
-│     🏹  ⚔️  💣                                    │
-│    [strzał] [atak] [przedmiot]                     │
-│                                                    │
-│   🛡️ Wóz: 85%    ❤️ Woźnica: 3/3                 │
-│                                                    │
-│   [UC IEKAJ]  — 30% szansy, stracisz część ładunku│
-└────────────────────────────────────────────────────┘
-```
+- [ ] 4.1 — Ile towarów? (kilkanaście / dziesiątki?)
+- [ ] 4.2 — Kategorie towarów — które?
+- [ ] 4.3 — Czy towary się psują?
+- [ ] 4.4 — Ceny statyczne czy dynamiczne?
+- [ ] 4.5 — Czy gracz może negocjować ceny?
+- [ ] 4.6 — Informacja jako towar — jak działa?
+- [ ] 4.7 — Waluta(y)?
 
 ---
 
-## 7. Inspiracje — co z czego czerpiemy
+## 6. System Podróży
 
-| Gra | Co czerpiemy |
-|-----|-------------|
-| **Stardew Valley** | Pixel art, top-down, relacje z NPC, pętla dnia, upgrade'y, klimat |
-| **Battle Brothers** | Dark fantasy, mapa świata, losowe spotkania, zarządzanie drużyną |
-| **Vagrus** | Karawana handlowa, dark fantasy, narracja, zarządzanie zasobami |
-| **Moonlighter** | System handlu, dynamiczne ceny, łączenie walki i ekonomii |
-| **FTL** | Podróż między punktami, losowe wydarzenia, zarządzanie kryzysowe |
-| **Mount & Blade** | Ekonomia karawanowa, geopolityka, frakcje |
-| **Darkest Dungeon** | Mroczny klimat, zarządzanie stresem, świadome ryzyko |
+> 🟡 **DO UZGODNIENIA** — checklist §5
+
+- [ ] 5.3 — Czy mapa jest od początku znana?
+- [ ] 5.5 — Pogoda — wpływ mechaniczny czy tylko wizualny?
+- [ ] 5.6 — Pora dnia — znaczenie mechaniczne?
 
 ---
 
-## 8. Etapy rozwoju
+## 7. System Walki / Obrony
 
-### MVP (Minimum Viable Product)
+> 🟡 **DO UZGODNIENIA** — checklist §6
 
-1. Mapa świata z 3 miastami, 2 biomami, traktami
-2. Ruch wozu (kliknięcie na miasto)
-3. System handlu: towary, ceny, kupno/sprzedaż
-4. Podstawowy HUD: złoto, ładowność, stan wozu
-5. Jedno losowe spotkanie (bandyci) + automatyczna walka
-6. Jeden upgrade (lepszy wóz)
+- [ ] 6.3 — Czy walkę można ominąć? (ucieczka, przekupstwo, skradanie?)
+- [ ] 6.4 — Stawka walki (co się traci?)
+- [ ] 6.5 — Przeciwnicy (bandyci, potwory, frakcje, inni handlarze?)
+- [ ] 6.6 — Najemnicy/eskorta (są? jak działają?)
+
+---
+
+## 8. System Geopolityczny
+
+> 🟡 **DO UZGODNIENIA** — checklist §7
+
+- [ ] 7.1 — Czy geopolityka jest w MVP?
+- [ ] 7.2 — Głębokość (prosta wojna/pokój czy złożona symulacja?)
+- [ ] 7.3 — Czy gracz może wpływać na sytuację?
+- [ ] 7.4 — Jak geopolityka wpływa na rozgrywkę?
+
+---
+
+## 9. Progresja i Upgrade'y
+
+> 🟡 **DO UZGODNIENIA** — checklist §8
+
+- [ ] 8.1 — Co można ulepszać? (wóz, koń, broń, ekwipunek...)
+- [ ] 8.2 — Drzewko wyborów czy liniowe ulepszenia?
+- [ ] 8.3 — Tempo progresji (ile godzin do pierwszego upgrade'u?)
+- [ ] 8.4 — Czy wszystko można zmaksować?
+
+---
+
+## 10. Interfejs
+
+> 🟡 **DO UZGODNIENIA** — checklist §9
+
+- [ ] 9.1 — Jakie ekrany/widoki?
+- [ ] 9.2 — HUD — co stale widoczne?
+- [ ] 9.3 — Sterowanie (mysz, klawiatura, oba?)
+- [ ] 9.4 — Minimalizm czy bogactwo informacji?
+- [ ] 9.5 — Rozdzielczość?
+
+---
+
+## 11. Grafika i Dźwięk
+
+> 🟡 **DO UZGODNIENIA** — checklist §10
+
+- [ ] 10.1 — Rozmiar pixela (16×16 / 32×32?)
+- [ ] 10.2 — Paleta kolorów?
+- [ ] 10.3 — Animacje (płynne, statyczne, minimalne?)
+- [ ] 10.4 — Assety własne vs gotowe?
+- [ ] 10.5 — Dźwięk (od razu czy później?)
+- [ ] 10.6 — Portrety NPC?
+
+---
+
+## 12. Narracja
+
+> 🟡 **DO UZGODNIENIA** — checklist §12
+
+- [ ] 12.1 — Fabuła główna? Jaka?
+- [ ] 12.2 — Questy? Jakie?
+- [ ] 12.3 — NPC z imionami/dialogami czy tylko interfejs?
+- [ ] 12.4 — Dziennik podróży / codex?
+- [ ] 12.5 — Endgame (jest? jaki?)
+
+---
+
+## 13. Techniczne
+
+> 🟡 **DO UZGODNIENIA** — checklist §11
+
+- [ ] 11.1 — Platformy: PC + Mac. Linux?
+- [ ] 11.2 — Silnik: Godot 4 (już jest). Potwierdzamy?
+- [ ] 11.3 — Metodyka: MVP → iteracje?
+- [ ] 11.4 — Współpraca: Przemek + Rychu. Ktoś jeszcze?
+- [ ] 11.5 — Testy automatyczne?
+
+---
+
+## 14. Ton, inspiracje, USP
+
+> 🟡 **DO UZGODNIENIA** — checklist §13 + §2.8
+
+- [ ] 2.8 — Ton narracji (grimdark / dark / sardoniczny?)
+- [ ] 13.1 — Które gry są świadomą inspiracją?
+- [ ] 13.2 — Czego NIE chcemy z gier referencyjnych?
+- [ ] 13.3 — Unikalny punkt sprzedaży — co wyróżnia Karawanę?
+
+---
+
+## Etapy rozwoju (szkielet)
+
+> 🟡 **DO UZGODNIENIA** — checklist §11.3
+
+### MVP
+- [ ] Co wchodzi? (do ustalenia na podstawie priorytetów z §1.2)
 
 ### v0.2
-
-1. Wszystkie biomy i miasta
-2. System geopolityczny (relacje frakcji)
-3. Informacje/plotki jako towar
-4. Więcej spotkań na trakcie
-5. Progresja (statystyki, reputacja)
+- [ ] Co dokładamy?
 
 ### v1.0
-
-1. Pełna walka taktyczna
-2. Fabuła / questy
-3. Sezony i pogoda
-4. Najemnicy
-5. Tajemnice świata (endgame)
+- [ ] Co w wersji finalnej?
 
 ---
 
-## 9. Otwarte pytania projektowe
+## Model ekonomiczny
 
-1. **Czas w grze:** Rzeczywisty (jak Stardew — dzień trwa X minut) czy system turowy (dzień mija po każdym trakcie)?
-2. **Walka:** Wariant A (taktyczna, turowa) czy B (automatyczna z wyborem taktyki)?
-3. **Nazwa gry:** Karawana, Mroczny Trakt, Woźnica, Karawaniarz...?
-4. **Permadeath?** Czy śmierć woźnicy to koniec gry (roguelike) czy restart od ostatniego miasta?
-5. **Narracja:** Czy są dialogi, questy, fabuła główna? Czy czysty sandbox?
-6. **NPC w miastach:** Czy są postaci z twarzami/portretami i dialogami? Czy tylko interfejs handlowy?
+> Osobny dokument: `docs/economy-model.md`  
+> Zawiera szczegółowe tabele towarów, cen, miast — do wypełnienia po decyzjach z checklist §4.
+
+---
+
+## Zarys świata
+
+> Osobny dokument: `docs/world-lore.md`  
+> Zawiera lore, frakcje, biomy — do wypełnienia po decyzjach z checklist §2.
